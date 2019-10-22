@@ -107,7 +107,7 @@ async def afk_on_pm(sender):
             apprv = True
         if apprv and ISAFK:
             if sender.sender_id not in USERS:
-                if AFKREASON:
+                if EXCUSE:
                     await sender.reply(f"I'm AFK right now.\
                     \nReason: `{EXCUSE}`")
                 else:
