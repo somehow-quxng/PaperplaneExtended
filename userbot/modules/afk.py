@@ -14,12 +14,6 @@ from userbot import (AFKREASON, COUNT_MSG, CMD_HELP, ISAFK, BOTLOG,
                      BOTLOG_CHATID, USERS, PM_AUTO_BAN)
 from userbot.events import register
 
-try:
-    from userbot.modules.sql_helper.globals import gvarstatus, addgvar, delgvar
-    afk_db = True
-except AttributeError:
-    afk_db = False
-
 # ========================= CONSTANTS ============================
 AFKSTR = [
     "I'm busy right now. Please talk in a bag and when I come back you can just give me the bag!",
@@ -54,12 +48,7 @@ async def mention_afk(mention):
     """ This function takes care of notifying the people who mention you that you are AFK."""
     global COUNT_MSG
     global USERS
-    if not afk_db:
-        global ISAFK
-        global AFFKREASON
-    else:
-        ISAFK = gvarstatus("AFK_STATUS")
-        AFKREASON = gvarstatus("AFK_REASON")
+    global ISAFK
     if mention.message.mentioned and not (await mention.get_sender()).bot:
         if ISAFK:
             if mention.sender_id not in USERS:
@@ -87,12 +76,7 @@ async def mention_afk(mention):
 @register(incoming=True, disable_errors=True)
 async def afk_on_pm(sender):
     """ Function which informs people that you are AFK in PM """
-    if not afk_db:
-        global ISAFK
-        global AFFKREASON
-    else:
-        ISAFK = gvarstatus("AFK_STATUS")
-        AFKREASON = gvarstatus("AFK_REASON")
+    global ISAFK
     global USERS
     global COUNT_MSG
     if sender.is_private and sender.sender_id != 777000 and not (
@@ -133,12 +117,8 @@ async def set_afk(afk_e):
     """ For .afk command, allows you to inform people that you are afk when they message you """
     message = afk_e.text
     string = afk_e.pattern_match.group(1)
-    if not afk_db:
-        global ISAFK
-        global AFFKREASON
-    else:
-        ISAFK = gvarstatus("AFK_STATUS")
-        AFKREASON = gvarstatus("AFK_REASON")
+    global ISAFK
+    global AFKREASON
     if string:
         AFKREASON = string
         await afk_e.edit(f"Going AFK!\
@@ -147,31 +127,19 @@ async def set_afk(afk_e):
         await afk_e.edit("Going AFK!")
     if BOTLOG:
         await afk_e.client.send_message(BOTLOG_CHATID, "#AFK\nYou went AFK!")
-    if afk_db:
-        addgvar("AFK_STATUS", True)
-    else:
-        ISAFK = True
+    ISAFK = True
     raise StopPropagation
 
 
 @register(outgoing=True)
 async def type_afk_is_not_true(notafk):
     """ This sets your status as not afk automatically when you write something while being afk """
+    global ISAFK
     global COUNT_MSG
     global USERS
-    if not afk_db:
-        global ISAFK
-        global AFFKREASON
-    else:
-        ISAFK = gvarstatus("AFK_STATUS")
-        AFKREASON = gvarstatus("AFK_REASON")
+    global AFKREASON
     if ISAFK:
-        if afk_db:
-            delgvar("AFK_STATUS")
-            delgvar("AFK_REASON")
-        else:
-            ISAFK = False
-            AFKREASON = None
+        ISAFK = False
         await notafk.respond("I'm no longer AFK.")
         await sleep(2)
         if BOTLOG:
@@ -190,6 +158,7 @@ async def type_afk_is_not_true(notafk):
                 )
         COUNT_MSG = 0
         USERS = {}
+        AFKREASON = None
 
 
 CMD_HELP.update({
