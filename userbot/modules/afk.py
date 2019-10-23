@@ -116,7 +116,7 @@ async def afk_on_pm(sender):
                 COUNT_MSG = COUNT_MSG + 1
             elif apprv and sender.sender_id in USERS:
                 if USERS[sender.sender_id] % randint(2, 4) == 0:
-                    if AFKREASON:
+                    if EXCUSE:
                         await sender.reply(f"I'm still AFK.\
                         \nReason: `{EXCUSE}`")
                     else:
