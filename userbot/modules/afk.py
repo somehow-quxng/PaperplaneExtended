@@ -64,7 +64,8 @@ async def mention_afk(mention):
         if ISAFK or ISAFK_SQL:
             if mention.sender_id not in USERS:
                 if EXCUSE:
-                    await mention.reply(f"`{EXCUSE}`")
+                    await mention.reply(f"I'm AFK right now.\
+                    \n`{EXCUSE}`")
                 else:
                     await mention.reply(str(choice(AFKSTR)))
                 USERS.update({mention.sender_id: 1})
@@ -72,7 +73,8 @@ async def mention_afk(mention):
             elif mention.sender_id in USERS:
                 if USERS[mention.sender_id] % randint(2, 4) == 0:
                     if EXCUSE:
-                        await mention.reply(f"`{EXCUSE}`")
+                        await mention.reply(f"In case you didn't notice, I'm still AFK.\
+                        \n`{EXCUSE}`")
                     else:
                         await mention.reply(str(choice(AFKSTR)))
                     USERS[mention.sender_id] = USERS[mention.sender_id] + 1
@@ -106,7 +108,8 @@ async def afk_on_pm(sender):
         if apprv and (ISAFK or ISAFK_SQL):
             if sender.sender_id not in USERS:
                 if EXCUSE:
-                    await sender.reply(f"`{EXCUSE}`")
+                    await sender.reply(f"I'm AFK right now.\
+                    \n`{EXCUSE}`")
                 else:
                     await sender.reply(str(choice(AFKSTR)))
                 USERS.update({sender.sender_id: 1})
@@ -114,7 +117,8 @@ async def afk_on_pm(sender):
             elif apprv and sender.sender_id in USERS:
                 if USERS[sender.sender_id] % randint(2, 4) == 0:
                     if EXCUSE:
-                        await sender.reply(f"`{EXCUSE}`")
+                        await sender.reply(f"In case you didn't notice, I'm still AFK.\
+                        \n`{EXCUSE}`")
                     else:
                         await sender.reply(str(choice(AFKSTR)))
                     USERS[sender.sender_id] = USERS[sender.sender_id] + 1
